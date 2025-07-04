@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Details</title>
+    <link rel="stylesheet" th:href="@{/css/flight-booking.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Payment Summary</h1>
+    </div>
+
+    <div class="payment-summary">
+        <h3>Cost Details</h3>
+        <p><strong>Cost per Passenger:</strong> $<span th:text="${costPerPassenger}"></span></p>
+        <p><strong>Number of Passengers:</strong> <span th:text="${numberOfPassengers}"></span></p>
+        <h2>Total Cost: $<span th:text="${totalCost}"></span></h2>
+    </div>
+
+    <!-- Payment Form -->
+    <form th:action="@{/make-payment}" method="POST">
+        <input type="hidden" name="scheduleId" th:value="${scheduleId}"/>
+        <input type="hidden" name="classId" th:value="${classId}"/>
+        <input type="hidden" name="totalCost" th:value="${totalCost}"/>
+
+        <!-- Hidden passenger data -->
+        <div th:each="passenger, stat : ${passengers}">
+            <input type="hidden" th:name="'firstName' + ${stat.index}" th:value="${passenger.firstName}"/>
+            <input type="hidden" th:name="'lastName' + ${stat.index}" th:value="${passenger.lastName}"/>
+            <input type="hidden" th:name="'email' + ${stat.index}" th:value="${passenger.email}"/>
+            <input type="hidden" th:name="'age' + ${stat.index}" th:value="${passenger.age}"/>
+            <input type="hidden" th:name="'gender' + ${stat.index}" th:value="${passenger.gender}"/>
+            <input type="hidden" th:name="'seatNumber' + ${stat.index}" th:value="${seatNumbers[stat.index]}"/>
+        </div>
+
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+            <button type="button" onclick="history.back()" style="background: #6c757d;">Back</button>
+            <button type="submit">Make Payment</button>
+        </div>
+    </form>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a th:href="@{/searchInputs}" style="color: #666; text-decoration: none;">Cancel & Back to Search</a>
+    </div>
+</div>
+</body>
+</html>

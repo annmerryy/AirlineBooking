@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Flights</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/flight-booking.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Available Flights</h1>
+
+    <!-- Search summary -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Search Details</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <p><strong>From:</strong> <span th:text="${param.departureCity}"></span></p>
+                </div>
+                <div class="col-md-3">
+                    <p><strong>To:</strong> <span th:text="${param.arrivalCity}"></span></p>
+                </div>
+                <div class="col-md-3">
+                    <p><strong>Date:</strong> <span th:text="${param.departureDate}"></span></p>
+                </div>
+                <div class="col-md-3">
+                    <p><strong>Class:</strong> <span th:text="${param.travelClass}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No flights message -->
+    <div th:if="${#lists.isEmpty(flights)}" class="alert alert-info">
+        No flights available for the selected criteria. Please try different search parameters.
+    </div>
+
+    <!-- Flights table -->
+    <div th:unless="${#lists.isEmpty(flights)}" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Airline</th>
+                <th>Flight Number</th>
+                <th>Departure</th>
+                <th>Departure Time</th>
+                <th>Arrival</th>
+                <th>Arrival Time</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="flight : ${flights}">
+                <td th:text="${flight.airlineName}"></td>
+                <td th:text="${flight.flightNumber}"></td>
+                <td th:text="${flight.departureCity}"></td>
+                <td th:text="${#temporals.format(flight.departureDate, 'HH:mm')}"></td>
+                <td th:text="${flight.arrivalCity}"></td>
+                <td th:text="${#temporals.format(flight.arrivalDate, 'HH:mm')}"></td>
+                <td th:text="${flight.duration + ' min'}"></td>
+                <td th:text="${flight.cost}"></td>
+                <td>
+                    <a th:href="@{/selectFlight(scheduleId=${flight.scheduleId}, travelClass=${param.travelClass}, numberOfTravellers=${numberOfTravellers})}"
+                       class="btn btn-primary btn-sm">Select</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back to search button -->
+    <div class="mt-4">
+        <a th:href="@{/searchInputs}" class="btn btn-secondary">Back to Search</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Passenger Details</title>
+    <link rel="stylesheet" th:href="@{/css/flight-booking.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Enter Passenger Details</h1>
+    </div>
+
+    <form th:action="@{/seat-selection}" method="POST">
+        <input type="hidden" name="scheduleId" th:value="${scheduleId}"/>
+        <input type="hidden" name="classId" th:value="${classId}"/>
+
+        <div th:each="passenger, stat : ${passengers}" class="form-section">
+            <h3 th:text="'Passenger ' + (${stat.index} + 1)"></h3>
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" th:name="'firstName' + ${stat.index}" required/>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" th:name="'lastName' + ${stat.index}" required/>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" th:name="'email' + ${stat.index}" pattern=".*@gmail\.com$" title="Email must end with @gmail.com" required/>
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" th:name="'age' + ${stat.index}" required/>
+            </div>
+
+            <div class="form-group">
+                <label>Gender</label>
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" th:name="'gender' + ${stat.index}" value="Male" th:id="'male' + ${stat.index}"/>
+                        <label th:for="'male' + ${stat.index}" style="margin: 0;">Male</label>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" th:name="'gender' + ${stat.index}" value="Female" th:id="'female' + ${stat.index}"/>
+                        <label th:for="'female' + ${stat.index}" style="margin: 0;">Female</label>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="radio" th:name="'gender' + ${stat.index}" value="Other" th:id="'other' + ${stat.index}"/>
+                        <label th:for="'other' + ${stat.index}" style="margin: 0;">Other</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+            <a th:href="@{/listFlights}" style="padding: 12px 30px; background: #6c757d; color: white; text-decoration: none; border-radius: 8px;">Back</a>
+            <button type="submit" onclick="return validateForm()">Select Seats</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function validateForm() {
+        let isValid = true;
+        let missingFields = [];
+
+        // Get all passenger forms
+        const passengerForms = document.querySelectorAll('.card');
+
+        passengerForms.forEach((form, index) => {
+            const passengerNum = index + 1;
+
+            // Check first name
+            const firstName = form.querySelector(`input[name="firstName${index}"]`);
+            if (!firstName || !firstName.value.trim()) {
+                missingFields.push(`Passenger ${passengerNum}: First Name`);
+                isValid = false;
+            }
+
+            // Check last name
+            const lastName = form.querySelector(`input[name="lastName${index}"]`);
+            if (!lastName || !lastName.value.trim()) {
+                missingFields.push(`Passenger ${passengerNum}: Last Name`);
+                isValid = false;
+            }
+
+            // Check email
+            const email = form.querySelector(`input[name="email${index}"]`);
+            if (!email || !email.value.trim()) {
+                missingFields.push(`Passenger ${passengerNum}: Email`);
+                isValid = false;
+            }
+
+            // Check age
+            const age = form.querySelector(`input[name="age${index}"]`);
+            if (!age || !age.value.trim()) {
+                missingFields.push(`Passenger ${passengerNum}: Age`);
+                isValid = false;
+            }
+
+            // Check gender
+            const genderRadios = form.querySelectorAll(`input[name="gender${index}"]`);
+            let genderSelected = false;
+            genderRadios.forEach(radio => {
+                if (radio.checked) {
+                    genderSelected = true;
+                }
+            });
+            if (!genderSelected) {
+                missingFields.push(`Passenger ${passengerNum}: Gender`);
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            alert('Please fill in all required fields:\n\n' + missingFields.join('\n'));
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</body>
+</html>

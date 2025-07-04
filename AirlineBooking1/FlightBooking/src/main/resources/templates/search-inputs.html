@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Search</title>
+    <link rel="stylesheet" th:href="@{/css/flight-booking.css}">
+</head>
+<body class="search-page">
+<div class="search-hero">
+    <h1 class="search-title">Find Your Perfect Flight</h1>
+
+    <div class="flight-search-widget">
+        <form th:action="@{/listFlights}" method="POST">
+            <div class="search-row">
+                <div class="search-field">
+                    <label for="departureCity">FROM</label>
+                    <input type="text" id="departureCity" name="departureCity" placeholder="Departure City" required>
+                </div>
+
+                <div class="search-field">
+                    <label for="arrivalCity">TO</label>
+                    <input type="text" id="arrivalCity" name="arrivalCity" placeholder="Arrival City" required>
+                </div>
+
+                <div class="search-field">
+                    <label for="departureDate">DEPARTURE</label>
+                    <input type="date" id="departureDate" name="departureDate" required>
+                </div>
+
+                <div class="search-field">
+                    <label for="travelClass">CLASS</label>
+                    <select id="travelClass" name="travelClass" required>
+                        <option value="Economy">Economy</option>
+                        <option value="Business">Business</option>
+                        <option value="First Class">First Class</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label for="numberOfTravellers">PASSENGERS</label>
+                    <input type="number" id="numberOfTravellers" name="numberOfTravellers" min="1" value="1" required>
+                </div>
+
+                <button type="submit" class="search-btn">SEARCH</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
